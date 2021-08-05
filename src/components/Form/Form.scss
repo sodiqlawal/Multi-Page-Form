@@ -1,0 +1,47 @@
+.required-color {
+  color: #f44336;
+  font-family: "Poppins Medium";
+  font-size: 12px;
+}
+.border-red {
+  border-color: #f44336;
+}
+.disabled {
+  background-color: #dddddd !important;
+  color: #0c233d !important;
+  cursor: default !important;
+}
+input,
+.form-control,
+.input-group-text svg,
+.input-group-text,
+select {
+  font-family: "Poppins Regular";
+  font-size: 14px;
+}
+
+.fileInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  label {
+    display: inline-block;
+    position: absolute;
+    margin: 0;
+    height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    cursor: pointer;
+
+    &::after {
+      display: none;
+    }
+  }
+
+  input {
+    display: none;
+  }
+}
