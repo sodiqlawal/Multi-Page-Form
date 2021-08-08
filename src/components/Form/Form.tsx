@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import {
@@ -7,15 +6,12 @@ import {
   FormikProps,
   useField,
   useFormikContext,
-  FormikConfig,
-  FormikValues,
-  Formik,
 } from "formik";
+import Cleave from "cleave.js/react";
 import classNames from "classnames";
 import "./Form.scss";
 import capitalizeFirstLetter from "../../lib/utils/titleCase";
 import useFileUpload from "../../hooks/useFileUpload";
-import { TFormPageController } from "../../hooks/useFormPageController";
 import SubmitButton from "./SubmitButton/Button";
 
 export const MyErrorMessage: React.FC<{ name: string }> = (props) => (
@@ -46,6 +42,48 @@ export const MyField = (props: MyFieldProps) => {
       className={classNames(props.className, {
         "border-red": meta.error && meta.touched,
       })}
+    />
+  );
+};
+
+export const MyTextArea = (props: MyFieldProps) => {
+  const [input, meta] = useField<any>(props.name);
+
+  return (
+    <textarea
+      {...props}
+      {...input}
+      value={input.value ?? ""}
+      className={classNames(props.className, {
+        "border-red": meta.error && meta.touched,
+      })}
+    />
+  );
+};
+
+interface TMyCurrencyInputProps extends React.InputHTMLAttributes<any> {
+  name: string;
+  prefix?: string;
+}
+
+export const MyCurrencyInput = (props: TMyCurrencyInputProps) => {
+  const [input, meta, helpers] = useField<number>(props.name);
+
+  return (
+    <Cleave
+      {...props}
+      {...input}
+      className={classNames(props.className, {
+        "border-red": meta.error && meta.touched,
+      })}
+      options={{
+        numeral: true,
+        numeralThousandsGroupStyle: "thousand",
+        prefix: props.prefix === undefined ? "₦ " : props.prefix,
+        noImmediatePrefix: true,
+        rawValueTrimPrefix: true,
+      }}
+      onChange={(e) => helpers.setValue(Number(e.target.rawValue))}
     />
   );
 };
@@ -93,58 +131,6 @@ export function MySelect<T>(props: TMySelectProps<T>) {
   );
 }
 
-export function MySelect2<T>(props: TMySelectProps<T>) {
-  const { getValue, getName, name, options, defaultName, ...restProps } = props;
-  const [, , helpers] = useField<string>(name);
-
-  return (
-    <MyField
-      name={name}
-      {...restProps}
-      as="select"
-      // value={meta.value ? getValue(meta.value) : ''}
-      onChange={(e) => {
-        helpers.setTouched(true);
-        helpers.setValue(e.currentTarget.value);
-        props.onChange?.(e);
-      }}
-    >
-      <option disabled value="">
-        {defaultName || restProps.placeholder || ""}
-      </option>
-      {options.map((option) => (
-        <option key={getValue(option)} value={getValue(option)}>
-          {getName(option)}
-        </option>
-      ))}
-    </MyField>
-  );
-}
-
-// I'm not sure if errors are memoized by default
-const defaultShouldTriggerErrors = (errors: object, nextErrors: object) =>
-  errors !== nextErrors;
-
-export const FormErrorListener = (props: {
-  shouldTriggerErrors?: Function;
-  onError: Function;
-}) => {
-  const shouldTriggerErrors =
-    props.shouldTriggerErrors || defaultShouldTriggerErrors;
-  const formik = useFormikContext();
-  const [errors, updateErrors] = React.useState(formik.errors);
-
-  React.useEffect(() => {
-    if (shouldTriggerErrors(errors, formik.errors)) {
-      props.onError(formik.errors);
-
-      updateErrors(errors);
-    }
-  }, [formik.errors]);
-
-  return null;
-};
-
 interface TRequirementInputProps extends React.InputHTMLAttributes<any> {
   name: string;
   mimeTypes: string[];
@@ -160,13 +146,12 @@ export const MyFileInput = (props: TRequirementInputProps) => {
 
   useEffect(() => {
     if (!file.file) return;
-
     helpers.setValue(file.file);
   }, [file.file]);
 
   return (
     <div
-      className={classNames("fileInputWrapper", props.className, {
+      className={classNames("file-input-wrapper", props.className, {
         "border-red": meta.error && meta.touched,
       })}
     >
@@ -178,81 +163,6 @@ export const MyFileInput = (props: TRequirementInputProps) => {
     </div>
   );
 };
-
-interface TFormNavigationButtonsProps<T> {
-  pageController: TFormPageController<T>;
-  getPageName: (id: T) => string;
-  excludePages?: T[];
-}
-
-export const FormNavigationButtons = <T extends string>(
-  props: TFormNavigationButtonsProps<T>
-) => {
-  return (
-    <div className="navButtonWrapper">
-      {props.pageController.pages.map(
-        (page, index: number) =>
-          !props.excludePages?.includes(page.id) && (
-            <div
-              key={page.id}
-              className={classNames("formProgressIndicator", {
-                active: page.isActive,
-                done: index < props.pageController.activePage.index,
-              })}
-            >
-              <div className="left">
-                <button
-                  type="button"
-                  onClick={async () => {
-                    if (props.pageController.activePage.id === page.id) return;
-
-                    await props.pageController.activePage.formController.current?.submitForm();
-
-                    if (
-                      !props.pageController.activePage.formController.current ||
-                      props.pageController.activePage.formController.current
-                        ?.isValid
-                    ) {
-                      props.pageController.goToPage(page.id);
-                    }
-                  }}
-                >
-                  {index + 1}
-                </button>
-                <div />
-              </div>
-              <div className="right">
-                <p>{props.getPageName(page.id)}</p>
-              </div>
-            </div>
-          )
-      )}
-    </div>
-  );
-};
-
-interface TFormikPageProps<T extends FormikValues, P extends string>
-  extends FormikConfig<T> {
-  pageController: TFormPageController<P>;
-  pageId: P;
-  children: (props: FormikProps<T>) => React.ReactNode;
-}
-
-export function FormikPage<T extends FormikValues, P extends string>(
-  props: TFormikPageProps<T, P>
-) {
-  const { children, pageController, pageId, ...formik } = props;
-
-  return (
-    <Formik<T> {...formik}>
-      {(formikProps) => {
-        pageController.getPage(pageId).formController.current = formikProps;
-        if (pageController?.activePage.id !== pageId) return null;
-        return children(formikProps);
-      }}
-    </Formik>
-  );
-}
 
 interface TMySubmitButtonProps {
   content: string;

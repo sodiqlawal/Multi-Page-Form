@@ -1,8 +1,8 @@
-import React from 'react';
-import classNames from 'classnames';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React from "react";
+import classNames from "classnames";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-interface TSubmitButtonProps
+interface TButtonProps
   extends React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
@@ -10,7 +10,7 @@ interface TSubmitButtonProps
   content: string;
   isLoading?: boolean;
 }
-const SubmitButton = (props: TSubmitButtonProps) => {
+const Button = (props: TButtonProps) => {
   const { isLoading, content, ...restProps } = props;
 
   return (
@@ -18,14 +18,17 @@ const SubmitButton = (props: TSubmitButtonProps) => {
     <button
       {...restProps}
       disabled={!!isLoading}
-      className={classNames('submit', props.className, {
+      className={classNames("button", props.className, {
         isSubmitting: !!isLoading,
       })}
     >
-      <CircularProgress size={15} thickness={6} color="inherit" />
-      <span>{content}</span>
+      {props.isLoading ? (
+        <CircularProgress size={15} thickness={6} color="inherit" />
+      ) : (
+        <span>{content}</span>
+      )}
     </button>
   );
 };
 
-export default SubmitButton;
+export default Button;

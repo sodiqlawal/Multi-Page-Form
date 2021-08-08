@@ -1,15 +1,20 @@
+@import "config/variable.scss";
 .required-color {
-  color: #f44336;
+  color: $red;
   font-family: "Poppins Medium";
   font-size: 12px;
 }
 .border-red {
-  border-color: #f44336;
+  border-color: $red;
 }
 .disabled {
-  background-color: #dddddd !important;
-  color: #0c233d !important;
-  cursor: default !important;
+  background-color: $disabled;
+  color: $primary;
+  cursor: default;
+}
+
+label {
+  font-size: 14px;
 }
 input,
 .form-control,
@@ -20,7 +25,7 @@ select {
   font-size: 14px;
 }
 
-.fileInputWrapper {
+.file-input-wrapper {
   position: relative;
   display: flex;
   align-items: center;

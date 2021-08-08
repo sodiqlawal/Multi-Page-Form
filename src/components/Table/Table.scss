@@ -1,0 +1,149 @@
+@import "../../config/variable.scss";
+.table-responsive {
+  min-height: 200px;
+}
+
+.table-container {
+  margin-top: 2rem;
+  border: 1px solid $lightGrey;
+  box-shadow: 3px 4px 5px $tableShadow;
+  border-radius: 10px;
+  padding: 0 1rem;
+  color: $primary;
+  font-family: "Poppins Regular";
+  position: relative;
+  background-color: $white;
+
+  .table th,
+  .table td {
+    vertical-align: middle !important;
+  }
+
+  .table-min-height {
+    min-height: 130px;
+    font-family: "Poppins SemiBold";
+  }
+
+  .table-container-after {
+    padding-bottom: 10px;
+  }
+
+  .table-loading-back-drop {
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    background-color: $backdrop;
+    margin-top: 40px;
+  }
+
+  .MuiCircularProgress-colorPrimary {
+    color: $primary;
+  }
+
+  .d-none {
+    display: none !important;
+  }
+  td,
+  th {
+    white-space: nowrap;
+  }
+  thead {
+    font-size: 11px;
+    border-bottom: 2px solid $lightGrey;
+    font-family: "Poppins Bold";
+
+    th {
+      min-width: 100px;
+
+      span {
+        .moreIcon {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+
+  tbody {
+    font-size: 10.5px;
+    letter-spacing: 0.2px;
+    font-family: "Poppins Regular";
+    position: relative;
+
+    tr {
+      line-height: 30px;
+    }
+  }
+  tfoot {
+    font-size: 10.5px;
+    letter-spacing: 0.2px;
+    font-family: "Poppins Regular";
+    position: relative;
+
+    tr {
+      line-height: 30px;
+
+      td {
+        &:first-child {
+          font-weight: bold;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+
+  .action-container {
+    position: relative;
+
+    .disabled {
+      opacity: 0.7;
+      cursor: not-allowed !important;
+      color: $white !important;
+    }
+
+    .action {
+      cursor: pointer;
+      display: flex;
+      background: $primary;
+      color: $white;
+      height: 30px;
+      border-radius: 5px;
+      padding-bottom: 5px;
+      padding-left: 5px;
+      font-family: "Poppins Regular";
+
+      div:first-child {
+        font-size: 11px;
+        margin: auto;
+      }
+
+      div:last-child {
+        margin-right: 8px;
+        margin-left: 2px;
+        margin-top: -1px;
+      }
+    }
+
+    .action-drop {
+      background: $white;
+      border-radius: 5px;
+      position: absolute;
+      width: 120px;
+      height: fit-content;
+      z-index: 1000;
+      top: 17px;
+      left: -35px;
+      text-align: center;
+      padding: 1px 5px 5px 5px;
+      box-shadow: 1px 1px 2px $lightGrey;
+
+      div {
+        color: $dark;
+        font-size: 10px;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

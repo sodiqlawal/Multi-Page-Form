@@ -1,0 +1,252 @@
+@import "../../config/variable.scss";
+.product-cover {
+  .back {
+    font-family: "Poppins SemiBold";
+    font-size: 15px;
+    width: fit-content;
+    cursor: pointer;
+
+    span {
+      margin-right: 5px;
+    }
+  }
+
+  .product-top {
+    p {
+      font-family: "Poppins SemiBold";
+      font-size: 18px;
+      margin-bottom: 3rem;
+      color: $lightBlue;
+    }
+  }
+
+  .product-bottom {
+    border: 1px solid $lightGrey;
+    border-radius: 20px;
+    display: flex;
+    position: relative;
+
+    .side-bar {
+      width: 40%;
+      background: $line;
+      font-size: 13px;
+      padding: 1rem 2rem;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+
+      .form-progress_indicator {
+        display: flex;
+
+        .left {
+          p {
+            background: $lightGrey;
+            color: $tertiary;
+            border: 5px solid $white;
+            box-shadow: 0px 10px 10px $lightGrey;
+            border-radius: 100%;
+            padding: 0.6rem 1rem;
+          }
+
+          div {
+            width: 5px;
+            height: 40px;
+            background: $lightGrey;
+            margin-left: 1.4rem;
+            margin-top: -1rem;
+          }
+        }
+
+        .right {
+          margin-left: 2rem;
+          margin-top: 0.8rem;
+
+          p {
+            color: $dark;
+            font-family: "Poppins Bold";
+          }
+        }
+
+        &.active {
+          display: flex;
+
+          .left {
+            p {
+              background: $primary;
+              color: $white;
+              border: 5px solid $white;
+              box-shadow: 0px 10px 10px $lightGrey;
+              border-radius: 100%;
+              padding: 0.6rem 1rem;
+            }
+
+            div {
+              width: 5px;
+              height: 40px;
+              background: $lightGrey;
+              margin-left: 1.4rem;
+              margin-top: -1rem;
+            }
+          }
+
+          .right {
+            margin-left: 2rem;
+            margin-top: 0.8rem;
+
+            p {
+              color: $dark;
+              font-family: "Poppins Bold";
+            }
+          }
+        }
+
+        &.done {
+          display: flex;
+
+          .left {
+            p {
+              background: $primary;
+              color: $white;
+              border: 5px solid $secondary;
+              border-radius: 100%;
+              padding: 0.6rem 1rem;
+            }
+
+            div {
+              width: 5px;
+              height: 40px;
+              background: $primary;
+              margin-left: 1.4rem;
+              margin-top: -1rem;
+            }
+          }
+
+          .right {
+            margin-left: 2rem;
+            margin-top: 0.8rem;
+
+            p {
+              color: $dark;
+              font-family: "Poppins Bold";
+            }
+          }
+        }
+
+        &:last-child {
+          .left > div {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+//new loan upload  table
+
+.product {
+  padding: 1rem 0;
+  background: $white 0% 0% no-repeat padding-box;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  width: 70%;
+
+  .product-details,
+  .schedule,
+  .pickup,
+  .summary {
+    padding: 0 2rem;
+
+    .title {
+      color: $lightBlue;
+      font-family: "Poppins SemiBold";
+    }
+
+    .form {
+      .input-container {
+        position: relative;
+      }
+    }
+  }
+
+  .summary {
+    .details {
+      margin-top: 2rem;
+      font-size: 12px;
+
+      .content {
+        p {
+          font-family: "Poppins SemiBold";
+        }
+
+        div {
+          display: flex;
+          justify-content: space-between;
+
+          p {
+            &:first-child {
+              color: $tertiary;
+              font-family: "Poppins Regular";
+            }
+
+            &:last-child {
+              font-family: "Poppins Medium";
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .product-cover {
+    .product-details {
+      padding: 1rem;
+    }
+
+    .schedule {
+      padding: 1rem;
+    }
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .product-cover {
+    .product-bottom {
+      flex-direction: column;
+
+      .side-bar,
+      .product {
+        width: 100% !important;
+      }
+
+      .side-bar {
+        display: flex;
+        padding: 1rem 5px;
+        justify-content: center;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 0px !important;
+
+        .right {
+          display: none;
+        }
+
+        .left {
+          display: flex;
+          align-items: center;
+          p {
+            margin-right: 0rem;
+            margin-bottom: 0rem;
+          }
+          div {
+            height: 5px !important;
+            width: 40px !important;
+            margin-left: 0rem !important;
+            margin-top: 0.1rem !important;
+          }
+        }
+      }
+    }
+  }
+}
