@@ -87,7 +87,7 @@ const Product = () => {
                   <MyErrorMessage name="unit_price" />
                 </div>
 
-                <div className="image  col-md-12 col-sm-12 required mb-3">
+                <div className="title col-md-12 col-sm-12 required mb-3">
                   <label htmlFor="image">Product Image</label>
                   <MyFileInput
                     name="image"
