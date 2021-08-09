@@ -49,6 +49,7 @@ export const createProductError = createAction(
 // edit product
 export interface TEditProductPayload {
   id: string;
+  product: TProduct;
   onSuccess?: () => void;
   onCompleted?: () => void;
 }

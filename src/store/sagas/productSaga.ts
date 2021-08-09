@@ -8,19 +8,18 @@ import {
   editProductSuccess,
   editProductError,
 } from "../actions/products";
-import Notify from "../actions/notifyAction";
 
 import { fetchProductService, editProductService } from "services/products";
+import { toastError, toastSuccess } from "lib/utils/toasters";
 
-function* fetchProductsSaga(action: ReturnType<typeof fetchProducts>) {
+function* fetchProductsSaga() {
   try {
-    const response = yield call(fetchProductService);
-    console.log(response, "all response");
+    const { payload } = yield call(fetchProductService);
 
     yield put(
       fetchProductsSuccess({
-        total: response.total,
-        products: response,
+        total: payload.data.total,
+        products: payload.data,
       })
     );
   } catch (error) {
@@ -29,28 +28,28 @@ function* fetchProductsSaga(action: ReturnType<typeof fetchProducts>) {
         error,
       })
     );
-    yield put(Notify.error(error.message));
+    toastError(error.message);
   }
 }
 
 function* editProductSaga(action: ReturnType<typeof editProduct>) {
   try {
-    const response = yield call(editProductService, action.payload);
+    const { response } = yield call(editProductService, action.payload);
 
     yield put(editProductSuccess(response.payload));
-    yield put(Notify.success("Contribution type updated successfully!"));
+    toastSuccess("Product editted successfully!");
     action.payload.onSuccess?.();
   } catch (error) {
     yield put(editProductError(error));
-    yield put(Notify.error(error.message));
+    toastError(error.message);
   } finally {
     action.payload.onCompleted?.();
   }
 }
 
-function* contributionSaga() {
+function* productSaga() {
   yield takeLatest(fetchProducts, fetchProductsSaga);
   yield takeLatest(editProduct, editProductSaga);
 }
 
-export default contributionSaga;
+export default productSaga;
