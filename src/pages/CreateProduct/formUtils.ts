@@ -1,5 +1,7 @@
+import { countries } from "config/countries.json";
 import { scheduleFrequency } from "config/constant";
 import { readBase64 } from "lib/utils/fileHandler";
+import switchValue from "lib/utils/switchValue";
 import { TProduct } from "models/product";
 import { TScheduleFrequency } from "models/schdeule";
 import { createContext } from "react";
@@ -12,7 +14,7 @@ export interface TFormData {
   title: string;
   description: string;
   unit_price: string;
-  image: File | null;
+  image: File | string | null;
   schedule_name: string;
   schedule_frequency: TScheduleFrequency;
   schedule_duration: number;
@@ -67,15 +69,20 @@ export const FormContext = createContext<TFormState>({
   isSubmitting: false,
 });
 
+// this is the main request payload generator, this is send at the submit form stage
 export const preparePayload = async (formData: TFormData) => {
   const formPayload: TProduct = {
     name: formData.name,
     title: formData.title,
     description: formData.description,
     unit_price: formData.unit_price,
-    image: formData.image ? await readBase64(formData.image) : "",
+    image: formData.image ? await readBase64(formData.image as File) : "",
     schedule_name: formData.schedule_name,
-    schedule_frequency: formData.schedule_frequency.name,
+    schedule_frequency: switchValue(formData.schedule_frequency.name, {
+      "BI-WEEKLY": 2,
+      MONTHLY: 4,
+      default: 1,
+    }),
     schedule_duration: formData.schedule_duration,
     pickup_name: formData.pickup_name,
     pickup_title: formData.pickup_title,
@@ -86,6 +93,38 @@ export const preparePayload = async (formData: TFormData) => {
     pickup_address: formData.pickup_address,
   };
   return formPayload;
+};
+
+// this is for converting the product response from the backend to the form data structure, mainly for editing
+export const prepareFormData = (data: TProduct) => {
+  const country = countries.find(
+    (country) => country.country === data.pickup_country
+  );
+  const frequency = switchValue(data.schedule_frequency.toString(), {
+    "2": "BI-WEEKLY",
+    "4": "MONTHLY",
+    default: "WEEKLY",
+  });
+  const formData: TFormData = {
+    name: data.name,
+    title: data.title,
+    description: data.description,
+    unit_price: data.unit_price,
+    image: data.image,
+    schedule_name: data.schedule_name,
+    schedule_frequency:
+      scheduleFrequency[frequency as TScheduleFrequency["name"]],
+    schedule_duration: data.schedule_duration,
+    pickup_name: data.pickup_name,
+    pickup_title: data.pickup_title,
+    pickup_country: { country: country?.country!, states: country?.states! },
+    pickup_states: country?.states!,
+    pickup_state: data.pickup_state,
+    pickup_city: data.pickup_city,
+    pickup_zip_code: data.pickup_zip_code,
+    pickup_address: data.pickup_address,
+  };
+  return formData;
 };
 
 // validation schemas

@@ -14,7 +14,7 @@ const AppRoute = () => {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/create-product" component={CreateProduct} />
-              <Route path="/edit-product" component={CreateProduct} />
+              <Route path="/edit-product/:id" component={CreateProduct} />
             </Switch>
           </Router>
         </div>

@@ -26,14 +26,15 @@ export const fetchProductsError = createAction(
 );
 
 // create product
-export interface TEditProductPayload {
+export interface TCreateProductPayload {
+  product: TProduct;
   onSuccess?: () => void;
   onCompleted?: () => void;
 }
 
 export const createProduct = createAction(
   ProductActionTypes.CREATE_PRODUCT,
-  withPayloadType<TEditProductPayload>()
+  withPayloadType<TCreateProductPayload>()
 );
 
 export const createProductSuccess = createAction(
@@ -49,6 +50,7 @@ export const createProductError = createAction(
 // edit product
 export interface TEditProductPayload {
   id: string;
+  product: TProduct;
   onSuccess?: () => void;
   onCompleted?: () => void;
 }

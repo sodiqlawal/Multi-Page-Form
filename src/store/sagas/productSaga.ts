@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 import { call, takeLatest, put } from "redux-saga/effects";
 import {
   fetchProducts,
@@ -7,20 +6,30 @@ import {
   editProduct,
   editProductSuccess,
   editProductError,
+  createProduct,
+  createProductSuccess,
+  createProductError,
+  deleteProduct,
+  deleteProductSuccess,
+  deleteProductError,
 } from "../actions/products";
-import Notify from "../actions/notifyAction";
 
-import { fetchProductService, editProductService } from "services/products";
+import {
+  fetchProductService,
+  editProductService,
+  createProductService,
+  deleteProductService,
+} from "services/products";
+import { toastError, toastSuccess } from "lib/utils/toasters";
 
-function* fetchProductsSaga(action: ReturnType<typeof fetchProducts>) {
+function* fetchProductsSaga() {
   try {
-    const response = yield call(fetchProductService);
-    console.log(response, "all response");
+    const { payload } = yield call(fetchProductService);
 
     yield put(
       fetchProductsSuccess({
-        total: response.total,
-        products: response,
+        total: payload.data.total,
+        products: payload.data,
       })
     );
   } catch (error) {
@@ -29,28 +38,58 @@ function* fetchProductsSaga(action: ReturnType<typeof fetchProducts>) {
         error,
       })
     );
-    yield put(Notify.error(error.message));
+    toastError(error.message);
   }
 }
 
-function* editProductSaga(action: ReturnType<typeof editProduct>) {
+function* createProductSaga(action: ReturnType<typeof createProduct>) {
   try {
-    const response = yield call(editProductService, action.payload);
+    const { payload } = yield call(createProductService, action.payload);
 
-    yield put(editProductSuccess(response.payload));
-    yield put(Notify.success("Contribution type updated successfully!"));
+    yield put(createProductSuccess(payload.data));
+    toastSuccess("Product created successfully!");
     action.payload.onSuccess?.();
   } catch (error) {
-    yield put(editProductError(error));
-    yield put(Notify.error(error.message));
+    yield put(createProductError(error));
+    toastError(error.message);
   } finally {
     action.payload.onCompleted?.();
   }
 }
 
-function* contributionSaga() {
-  yield takeLatest(fetchProducts, fetchProductsSaga);
-  yield takeLatest(editProduct, editProductSaga);
+function* editProductSaga(action: ReturnType<typeof editProduct>) {
+  try {
+    const { payload } = yield call(editProductService, action.payload);
+
+    yield put(editProductSuccess(payload.data));
+    toastSuccess("Product edited successfully!");
+    action.payload.onSuccess?.();
+  } catch (error) {
+    yield put(editProductError(error));
+    toastError(error.message);
+  } finally {
+    action.payload.onCompleted?.();
+  }
 }
 
-export default contributionSaga;
+function* deleteProductSaga(action: ReturnType<typeof deleteProduct>) {
+  try {
+    const { id } = yield call(deleteProductService, action.payload);
+
+    yield put(deleteProductSuccess({ id }));
+    toastSuccess("Product deleted successfully!");
+    action.payload.onSuccess?.();
+  } catch (error) {
+    yield put(deleteProductError(error));
+    toastError(error.message);
+  }
+}
+
+function* productSaga() {
+  yield takeLatest(fetchProducts, fetchProductsSaga);
+  yield takeLatest(createProduct, createProductSaga);
+  yield takeLatest(editProduct, editProductSaga);
+  yield takeLatest(deleteProduct, deleteProductSaga);
+}
+
+export default productSaga;

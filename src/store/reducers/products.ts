@@ -65,7 +65,7 @@ const productReducer = createReducer(initialState, (builder) =>
     .addCase(productActions.deleteProductSuccess, (state, action) => {
       state.isDeleteLoading = false;
       state.products = state.products.filter(
-        (product) => product.id !== action.payload.id.toString()
+        (product) => product.id !== action.payload.id
       );
       state.total = state.products.length;
     })

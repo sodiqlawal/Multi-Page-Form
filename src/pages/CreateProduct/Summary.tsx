@@ -3,9 +3,12 @@ import { FormContext } from "./formUtils";
 import titleCase from "lib/utils/titleCase";
 import currencyFormatter from "lib/utils/currencyFormatter";
 import Button from "components/Form/SubmitButton/Button";
+import { useParams } from "react-router-dom";
 
 const defaultVal = "----";
 const Summary = () => {
+  const params = useParams<{ id: string }>();
+  const isEditing = !!params.id;
   const { formData, isSubmitting, submitForm, previousPage } =
     useContext(FormContext);
 
@@ -94,7 +97,7 @@ const Summary = () => {
           <Button onClick={previousPage} content="Previous" />
           <Button
             onClick={submitForm}
-            content="Create Product"
+            content={isEditing ? "Edit Product" : "Create Product"}
             isLoading={isSubmitting}
           />
         </div>

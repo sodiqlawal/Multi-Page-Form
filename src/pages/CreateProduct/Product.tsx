@@ -7,7 +7,7 @@ import {
   MyTextArea,
   MyCurrencyInput,
   MySubmitButton,
-  MyFileInput,
+  // MyFileInput,
 } from "components/Form/Form";
 import { FormContext, productValidationSchema, TFormData } from "./formUtils";
 import Button from "components/Form/SubmitButton/Button";
@@ -82,12 +82,13 @@ const Product = () => {
                     name="unit_price"
                     className="form-control"
                     id="unit_price"
-                    placeholder="₦ 5,000"
+                    prefix="$"
+                    placeholder="$ 5,000"
                   />
                   <MyErrorMessage name="unit_price" />
                 </div>
 
-                <div className="title col-md-12 col-sm-12 required mb-3">
+                {/* <div className="title col-md-12 col-sm-12 required mb-3">
                   <label htmlFor="image">Product Image</label>
                   <MyFileInput
                     name="image"
@@ -98,7 +99,7 @@ const Product = () => {
                     placeholder="Select Image"
                   />
                   <MyErrorMessage name="image" />
-                </div>
+                </div> */}
 
                 <div className="button-cover">
                   <Button
