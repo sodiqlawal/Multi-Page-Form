@@ -1,10 +1,18 @@
+import AppRoute from "routes/routes";
+import { ToastContainer } from "react-toastify";
+import { Provider } from "react-redux";
+import store from "store";
+
 import "./App.scss";
 
 function App() {
   return (
-    <div>
-      <h1>Welcome</h1>
-    </div>
+    <Provider store={store}>
+      {/* <PersistGate loading={null} persistor={persistor}> */}
+      <ToastContainer />
+      <AppRoute />
+      {/* </PersistGate> */}
+    </Provider>
   );
 }
 
