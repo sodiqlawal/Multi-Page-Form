@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import classNames from "classnames";
 import switchValue from "lib/utils/switchValue";
-import { useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import {
   FormContext,
   initialFormData,
+  prepareFormData,
   preparePayload,
   TFormData,
   TPages,
@@ -15,16 +16,42 @@ import Schedule from "./Schedule";
 import Product from "./Product";
 import Pickup from "./Pickup";
 import Summary from "./Summary";
-import { useDispatch } from "react-redux";
-import { createProduct } from "store/actions/products";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  createProduct,
+  editProduct,
+  fetchProducts,
+} from "store/actions/products";
 
 const CreateProduct = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const params = useParams<{ id: string }>();
+  const isEditing = !!params.id && location.pathname.includes("edit");
+  // get product info for editing
+  const product = useSelector((select) =>
+    select.productReducer.products.find((product) => product.id === params.id)
+  );
   const [page, setPage] = useState<TPages>("Product");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<TFormData>(initialFormData);
   const completedPages = useRef<TPages[]>([]);
+
+  // if editing , dispatch product actions, to get product info
+  useEffect(() => {
+    if (isEditing) {
+      dispatch(fetchProducts());
+    }
+  }, []);
+
+  // if product info, initialized the form with the product info
+  const initialized = !!product;
+  useEffect(() => {
+    if (!initialized) return;
+    const data = prepareFormData(product!);
+    setFormData(data);
+  }, [initialized]);
 
   const nextPage = () => {
     completedPages.current.push(page);
@@ -54,17 +81,32 @@ const CreateProduct = () => {
     setIsSubmitting(true);
 
     const payload = await preparePayload(formData);
-    dispatch(
-      createProduct({
-        product: payload,
-        onSuccess: () => {
-          history.push("/");
-        },
-        onCompleted: () => {
-          setIsSubmitting(false);
-        },
-      })
-    );
+    if (isEditing) {
+      dispatch(
+        editProduct({
+          id: params.id,
+          product: payload,
+          onSuccess: () => {
+            history.push("/");
+          },
+          onCompleted: () => {
+            setIsSubmitting(false);
+          },
+        })
+      );
+    } else {
+      dispatch(
+        createProduct({
+          product: payload,
+          onSuccess: () => {
+            history.push("/");
+          },
+          onCompleted: () => {
+            setIsSubmitting(false);
+          },
+        })
+      );
+    }
   };
 
   const getSideClassName = (pageName: TPages) =>

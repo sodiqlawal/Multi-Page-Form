@@ -62,7 +62,7 @@ function* editProductSaga(action: ReturnType<typeof editProduct>) {
     const { payload } = yield call(editProductService, action.payload);
 
     yield put(editProductSuccess(payload.data));
-    toastSuccess("Product editted successfully!");
+    toastSuccess("Product edited successfully!");
     action.payload.onSuccess?.();
   } catch (error) {
     yield put(editProductError(error));
