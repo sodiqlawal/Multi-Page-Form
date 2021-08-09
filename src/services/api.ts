@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import axios, { AxiosRequestConfig, Method } from "axios";
-import { ApiHeader, OptionsArgs } from "models/client";
+import { ApiHeader, OptionsArgs } from "models/api";
 import { env } from "config/environment";
 
 axios.interceptors.response.use(

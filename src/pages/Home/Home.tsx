@@ -7,21 +7,11 @@ import { useHistory } from "react-router-dom";
 import Button from "components/Form/SubmitButton/Button";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "store/actions/products";
+import { deleteProduct, fetchProducts } from "store/actions/products";
 import currencyFormatter from "lib/utils/currencyFormatter";
-import switchValue from "lib/utils/switchValue";
-
-function schedule(frequency: string, duration: number) {
-  const weekNum = switchValue(frequency, {
-    "BI-WEEKLY": 2,
-    MONTHLY: 4,
-    default: 1,
-  });
-
-  return `${weekNum * duration} weeks`;
-}
 
 const tableHead: { name: keyof TableData; displayName: string }[] = [
+  { name: "sn", displayName: "S/N" },
   { name: "name", displayName: "Name" },
   { name: "title", displayName: "Title" },
   { name: "unit_price", displayName: "Unit Price" },
@@ -33,6 +23,7 @@ const tableHead: { name: keyof TableData; displayName: string }[] = [
 ];
 type TableData = TProduct & {
   action: React.ReactNode;
+  sn: number;
 };
 const Home = () => {
   const history = useHistory();
@@ -43,9 +34,13 @@ const Home = () => {
 
   const { isLoading, products } = productReducer;
 
-  const dropDownSelected = (label: string, item: TProduct) => {
-    if (label === "Edit product") {
-      history.push("/edit-product");
+  const dropDownSelected = (label: string, { id }: TProduct) => {
+    if (label === "Edit Product") {
+      history.push(`/edit-product/${id}`);
+    }
+
+    if (label === "Delete Product") {
+      dispatch(deleteProduct({ id: id as string }));
     }
   };
 
@@ -64,20 +59,24 @@ const Home = () => {
         fields={tableHead}
         tableData={products}
         isLoading={isLoading}
-        builder={(field, data) => {
+        builder={(field, data, i) => {
           switch (field.name) {
+            case "sn":
+              return `${i + 1}.`;
             case "action":
               return (
                 <Action
                   item={data}
-                  labels={["Edit product"]}
+                  labels={["Edit Product", "Delete Product"]}
                   onSelected={dropDownSelected}
                 />
               );
             case "unit_price":
               return currencyFormatter(data.unit_price, "$");
             case "schedule_duration":
-              return schedule(data.schedule_frequency, data.schedule_duration);
+              return `${
+                data.schedule_frequency * data.schedule_duration
+              }  weeks`;
 
             default:
               return data[field.name];

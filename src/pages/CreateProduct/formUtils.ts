@@ -1,5 +1,6 @@
 import { scheduleFrequency } from "config/constant";
 import { readBase64 } from "lib/utils/fileHandler";
+import switchValue from "lib/utils/switchValue";
 import { TProduct } from "models/product";
 import { TScheduleFrequency } from "models/schdeule";
 import { createContext } from "react";
@@ -75,7 +76,11 @@ export const preparePayload = async (formData: TFormData) => {
     unit_price: formData.unit_price,
     image: formData.image ? await readBase64(formData.image) : "",
     schedule_name: formData.schedule_name,
-    schedule_frequency: formData.schedule_frequency.name,
+    schedule_frequency: switchValue(formData.schedule_frequency.name, {
+      "BI-WEEKLY": 2,
+      MONTHLY: 4,
+      default: 1,
+    }),
     schedule_duration: formData.schedule_duration,
     pickup_name: formData.pickup_name,
     pickup_title: formData.pickup_title,

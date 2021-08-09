@@ -72,6 +72,7 @@ ul {
       background-color: $primary;
       border: 1px solid $primary;
       color: $white;
+      min-width: 100px;
     }
 
     &.cancel {

@@ -15,9 +15,12 @@ import Schedule from "./Schedule";
 import Product from "./Product";
 import Pickup from "./Pickup";
 import Summary from "./Summary";
+import { useDispatch } from "react-redux";
+import { createProduct } from "store/actions/products";
 
 const CreateProduct = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
   const [page, setPage] = useState<TPages>("Product");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<TFormData>(initialFormData);
@@ -51,8 +54,17 @@ const CreateProduct = () => {
     setIsSubmitting(true);
 
     const payload = await preparePayload(formData);
-    console.log(payload, "payload");
-    // history.push("/");
+    dispatch(
+      createProduct({
+        product: payload,
+        onSuccess: () => {
+          history.push("/");
+        },
+        onCompleted: () => {
+          setIsSubmitting(false);
+        },
+      })
+    );
   };
 
   const getSideClassName = (pageName: TPages) =>

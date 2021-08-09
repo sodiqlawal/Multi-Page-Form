@@ -6,7 +6,7 @@ export interface TProduct {
   unit_price: string;
   image: string;
   schedule_name: string;
-  schedule_frequency: string;
+  schedule_frequency: number;
   schedule_duration: number;
   pickup_name: string;
   pickup_title: string;
