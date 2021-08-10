@@ -7,24 +7,23 @@ import {
   useField,
   useFormikContext,
 } from "formik";
-import Cleave from "cleave.js/react";
 import classNames from "classnames";
 import "./Form.scss";
-import capitalizeFirstLetter from "../../lib/utils/titleCase";
-import useFileUpload from "../../hooks/useFileUpload";
+import titleCase from "lib/utils/titleCase";
+import useFileUpload from "hooks/useFileUpload";
 import SubmitButton from "./SubmitButton/Button";
 
 export const MyErrorMessage: React.FC<{ name: string }> = (props) => (
   <ErrorMessage name={props.name}>
     {(msg) => (
-      <div className="required-color">
-        {capitalizeFirstLetter(msg).replace(/_/g, " ")}
+      <div className="required-color" data-testid={`${props.name}-error`}>
+        {titleCase(msg).replace(/_/g, " ")}
       </div>
     )}
   </ErrorMessage>
 );
 
-type MyFieldProps = React.InputHTMLAttributes<any> & {
+export type MyFieldProps = React.InputHTMLAttributes<any> & {
   // You can add more input types here
   as?: "radio" | "input" | "select" | "radio" | "checkbox" | "textarea";
   name: string;
@@ -42,6 +41,7 @@ export const MyField = (props: MyFieldProps) => {
       className={classNames(props.className, {
         "border-red": meta.error && meta.touched,
       })}
+      data-testid={props.name}
     />
   );
 };
@@ -65,28 +65,6 @@ interface TMyCurrencyInputProps extends React.InputHTMLAttributes<any> {
   name: string;
   prefix?: string;
 }
-
-export const MyCurrencyInput = (props: TMyCurrencyInputProps) => {
-  const [input, meta, helpers] = useField<number>(props.name);
-
-  return (
-    <Cleave
-      {...props}
-      {...input}
-      className={classNames(props.className, {
-        "border-red": meta.error && meta.touched,
-      })}
-      options={{
-        numeral: true,
-        numeralThousandsGroupStyle: "thousand",
-        prefix: props.prefix === undefined ? "₦ " : props.prefix,
-        noImmediatePrefix: true,
-        rawValueTrimPrefix: true,
-      }}
-      onChange={(e) => helpers.setValue(Number(e.target.rawValue))}
-    />
-  );
-};
 
 interface TMySelectProps<T> extends React.SelectHTMLAttributes<any> {
   getValue: (option: T) => string;
@@ -177,6 +155,7 @@ export const MySubmitButton = (props: TMySubmitButtonProps) => {
       isLoading={formikContext.isSubmitting || !!props.isSubmitting}
       type={props.type || "submit"}
       content={props.content}
+      data-testid={props.type || "submit"}
     />
   );
 };

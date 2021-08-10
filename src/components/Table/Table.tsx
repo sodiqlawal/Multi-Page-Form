@@ -56,11 +56,15 @@ function Table<TField, TData = TField>({
       rowElements.push(<td key={j}>{builder(field, data, i, j)}</td>);
     }
 
-    columnElements.push(<tr key={i}>{rowElements}</tr>);
+    columnElements.push(
+      <tr key={i} data-testid="product">
+        {rowElements}
+      </tr>
+    );
   }
 
   return (
-    <div className="table-container table-responsive">
+    <div className="table-container table-responsive" data-testid="product">
       <table className="table table-borderless table-hover ">
         <thead>
           <tr>
