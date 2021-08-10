@@ -6,6 +6,7 @@ import {
   MyField,
   MyTextArea,
   MySubmitButton,
+  MyFileInput,
 } from "components/Form/Form";
 import { MyCurrencyInput } from "components/Form/CurrencyInput/CurrencyInput";
 import { FormContext, productValidationSchema, TFormData } from "./formUtils";
@@ -87,18 +88,19 @@ const Product = () => {
                   <MyErrorMessage name="unit_price" />
                 </div>
 
-                {/* <div className="title col-md-12 col-sm-12 required mb-3">
+                <div className="title col-md-12 col-sm-12 required mb-3">
                   <label htmlFor="image">Product Image</label>
                   <MyFileInput
-                    name="image"
+                    name="imageFile"
                     getFileName={(file) => file.name}
                     mimeTypes={["image/jpeg", "image/png", "image/jpg"]}
                     id="image"
                     className="form-control"
                     placeholder="Select Image"
+                    imageUrl={formData.image || ""}
                   />
-                  <MyErrorMessage name="image" />
-                </div> */}
+                  <MyErrorMessage name="imageFile" />
+                </div>
 
                 <div className="button-cover">
                   <Button

@@ -2,4 +2,17 @@
   .button-cover {
     margin: 1rem 0;
   }
+
+  .product-name-image_cover {
+    display: flex;
+    align-items: center;
+
+    img {
+      margin-right: 5px;
+      width: 25px;
+      height: 25px;
+      border-radius: 100%;
+      object-fit: cover;
+    }
+  }
 }

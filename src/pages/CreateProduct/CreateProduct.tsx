@@ -22,6 +22,7 @@ import {
   editProduct,
   fetchProducts,
 } from "store/actions/products";
+import { uploadFile } from "services/file";
 
 const CreateProduct = () => {
   const history = useHistory();
@@ -80,12 +81,15 @@ const CreateProduct = () => {
   const submitForm = async () => {
     setIsSubmitting(true);
 
+    const imageData = formData.imageFile
+      ? await uploadFile(formData.imageFile as File)
+      : "";
     const payload = await preparePayload(formData);
     if (isEditing) {
       dispatch(
         editProduct({
           id: params.id,
-          product: payload,
+          product: { ...payload, image: imageData?.image ?? "" },
           onSuccess: () => {
             history.push("/");
           },
@@ -97,7 +101,7 @@ const CreateProduct = () => {
     } else {
       dispatch(
         createProduct({
-          product: payload,
+          product: { ...payload, image: imageData?.image ?? "" },
           onSuccess: () => {
             history.push("/");
           },

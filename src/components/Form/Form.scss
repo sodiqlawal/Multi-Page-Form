@@ -27,26 +27,61 @@ select {
 
 .file-input-wrapper {
   position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
   display: flex;
+  justify-content: center;
   align-items: center;
-  cursor: pointer;
+  transition: all 0.4s ease;
 
-  label {
-    display: inline-block;
+  .inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
     position: absolute;
-    margin: 0;
-    height: 100%;
-    top: 0;
-    left: 0;
-    width: 100%;
-    cursor: pointer;
-
-    &::after {
-      display: none;
-    }
+    z-index: -1;
   }
 
-  input {
-    display: none;
+  img,
+  label {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    object-fit: cover;
+    transition: all 0.4s ease;
+  }
+
+  .inputfile + label {
+    font-size: 1.25em;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  .image {
+    position: relative;
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      border-radius: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      .icon {
+        color: $primary;
+      }
+    }
   }
 }
