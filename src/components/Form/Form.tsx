@@ -61,11 +61,6 @@ export const MyTextArea = (props: MyFieldProps) => {
   );
 };
 
-interface TMyCurrencyInputProps extends React.InputHTMLAttributes<any> {
-  name: string;
-  prefix?: string;
-}
-
 interface TMySelectProps<T> extends React.SelectHTMLAttributes<any> {
   getValue: (option: T) => string;
   getName: (option: T) => string;
