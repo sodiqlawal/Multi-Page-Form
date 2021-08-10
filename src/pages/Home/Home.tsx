@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, fetchProducts } from "store/actions/products";
 import currencyFormatter from "lib/utils/currencyFormatter";
+import titleCase from "lib/utils/titleCase";
 
 const tableHead: { name: keyof TableData; displayName: string }[] = [
   { name: "sn", displayName: "S/N" },
@@ -70,6 +71,19 @@ const Home = () => {
                   labels={["Edit Product", "Delete Product"]}
                   onSelected={dropDownSelected}
                 />
+              );
+            case "name":
+              return (
+                <div className="product-name-image_cover">
+                  {data.image ? (
+                    <div>
+                      <img src={data.image} alt="product" />
+                    </div>
+                  ) : (
+                    <div />
+                  )}
+                  <div>{titleCase(data.name)}</div>
+                </div>
               );
             case "unit_price":
               return currencyFormatter(data.unit_price, "$");

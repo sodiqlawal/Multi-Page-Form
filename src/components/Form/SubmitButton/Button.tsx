@@ -2,7 +2,7 @@ import React from "react";
 import classNames from "classnames";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-interface TButtonProps
+export interface TButtonProps
   extends React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
@@ -21,11 +21,12 @@ const Button = (props: TButtonProps) => {
       className={classNames("button", props.className, {
         isSubmitting: !!isLoading,
       })}
+      data-testid="button"
     >
       {props.isLoading ? (
         <CircularProgress size={15} thickness={6} color="inherit" />
       ) : (
-        <span>{content}</span>
+        <span data-testid="content">{content}</span>
       )}
     </button>
   );
