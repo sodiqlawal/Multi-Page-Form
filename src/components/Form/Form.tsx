@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Field,
   ErrorMessage,
@@ -8,10 +8,14 @@ import {
   useFormikContext,
 } from "formik";
 import classNames from "classnames";
+import white from "asset/white.png";
 import "./Form.scss";
 import titleCase from "lib/utils/titleCase";
+import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import useFileUpload from "hooks/useFileUpload";
 import SubmitButton from "./SubmitButton/Button";
+import { readBase64 } from "lib/utils/fileHandler";
+import { FormContext } from "pages/CreateProduct/formUtils";
 
 export const MyErrorMessage: React.FC<{ name: string }> = (props) => (
   <ErrorMessage name={props.name}>
@@ -108,19 +112,41 @@ interface TRequirementInputProps extends React.InputHTMLAttributes<any> {
   name: string;
   mimeTypes: string[];
   getFileName: (file: File) => string;
+  imageUrl: string;
 }
 
 export const MyFileInput = (props: TRequirementInputProps) => {
-  const { mimeTypes, ...restProps } = props;
+  const { mimeTypes } = props;
   const [input, meta, helpers] = useField<File>(props.name);
+  const { formData } = useContext(FormContext);
+  const [base64, setBase64] = useState("");
   const file = useFileUpload({
     mimeTypes,
   });
 
   useEffect(() => {
-    if (!file.file) return;
-    helpers.setValue(file.file);
-  }, [file.file]);
+    if (!file.file && !formData.imageFile) return;
+
+    // update formik input
+    helpers.setValue(file.file ?? formData.imageFile!);
+
+    // convert to base64 for display
+    const reader = new FileReader();
+
+    reader.addEventListener("load", async () => {
+      const b64 = await readBase64(file.file! ?? formData.imageFile);
+
+      setBase64(b64);
+    });
+    reader.readAsDataURL(file.file ?? formData.imageFile!);
+  }, [file.file, formData.imageFile]);
+
+  useEffect(() => {
+    // update the base64 with image url, mainly during editing
+    if (props.imageUrl) {
+      setBase64(props.imageUrl);
+    }
+  }, [props.imageUrl]);
 
   return (
     <div
@@ -128,11 +154,23 @@ export const MyFileInput = (props: TRequirementInputProps) => {
         "border-red": meta.error && meta.touched,
       })}
     >
-      <label>
-        <input {...input} value="" type="file" onChange={file.onChange} />
+      <input
+        {...input}
+        className="inputfile"
+        accept=".jpg, .jpeg, .png"
+        value=""
+        type="file"
+        id="file"
+        onChange={file.onChange}
+      />
+      <label htmlFor="file">
+        <div className="image">
+          <img src={base64 || white} alt="select" />
+          <div className="overlay">
+            <CameraAltIcon className="icon" />
+          </div>
+        </div>
       </label>
-      {!meta.value && <span>{restProps.placeholder}</span>}
-      <span>{meta.value && props.getFileName(meta.value)}</span>
     </div>
   );
 };

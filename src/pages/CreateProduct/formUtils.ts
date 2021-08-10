@@ -1,6 +1,5 @@
 import { countries } from "config/countries.json";
 import { scheduleFrequency } from "config/constant";
-import { readBase64 } from "lib/utils/fileHandler";
 import switchValue from "lib/utils/switchValue";
 import { TProduct } from "models/product";
 import { TScheduleFrequency } from "models/schdeule";
@@ -14,7 +13,8 @@ export interface TFormData {
   title: string;
   description: string;
   unit_price: string;
-  image: File | string | null;
+  image: string;
+  imageFile?: File | null;
   schedule_name: string;
   schedule_frequency: TScheduleFrequency;
   schedule_duration: number;
@@ -33,7 +33,8 @@ export const initialFormData: TFormData = {
   title: "",
   description: "",
   unit_price: "",
-  image: null,
+  image: "",
+  imageFile: null,
   schedule_name: "",
   schedule_frequency: scheduleFrequency.WEEKLY,
   schedule_duration: 0,
@@ -76,7 +77,7 @@ export const preparePayload = async (formData: TFormData) => {
     title: formData.title,
     description: formData.description,
     unit_price: formData.unit_price,
-    image: formData.image ? await readBase64(formData.image as File) : "",
+    image: formData.image ? formData.image : "",
     schedule_name: formData.schedule_name,
     schedule_frequency: switchValue(formData.schedule_frequency.name, {
       "BI-WEEKLY": 2,
@@ -110,7 +111,7 @@ export const prepareFormData = (data: TProduct) => {
     title: data.title,
     description: data.description,
     unit_price: data.unit_price,
-    image: data.image,
+    image: data.image || "",
     schedule_name: data.schedule_name,
     schedule_frequency:
       scheduleFrequency[frequency as TScheduleFrequency["name"]],
