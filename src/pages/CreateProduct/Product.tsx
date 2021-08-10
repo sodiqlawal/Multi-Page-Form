@@ -5,10 +5,9 @@ import {
   MyErrorMessage,
   MyField,
   MyTextArea,
-  MyCurrencyInput,
   MySubmitButton,
-  // MyFileInput,
 } from "components/Form/Form";
+import { MyCurrencyInput } from "components/Form/CurrencyInput/CurrencyInput";
 import { FormContext, productValidationSchema, TFormData } from "./formUtils";
 import Button from "components/Form/SubmitButton/Button";
 
